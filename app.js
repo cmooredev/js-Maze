@@ -33,6 +33,12 @@ const startGame = () => {
     Render.run(render);
     Runner.run(Runner.create(), engine);
     
+    //Timer 
+    const setTimer = () => {
+        const timer = document.querySelector('#timer');
+        console.log(timer.innerHTML);
+    };
+
     //Walls
     const walls = [
         Bodies.rectangle(width/2, 0, width, 2, {
@@ -122,6 +128,7 @@ const startGame = () => {
         
     
     };
+    setTimer();
     stepThroughCell(startRow, startColumn);
     
     horizontals.forEach((row, rowIndex) => {
