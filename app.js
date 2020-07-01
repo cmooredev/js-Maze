@@ -35,8 +35,24 @@ const startGame = () => {
     
     //Timer 
     const setTimer = () => {
+        
         const timer = document.querySelector('#timer');
-        console.log(timer.innerHTML);
+        let timeLeft = 60;
+        timer.innerHTML = timeLeft;
+
+
+        const timeClock = setInterval( () => {
+            if(timer.innerHTML !== 'GAME OVER'){
+                timeLeft--;
+                timer.innerHTML = timeLeft;
+                if(timeLeft <= 0){
+                winGame('loser');
+                clearInterval(timeClock);
+                };
+            };
+            
+        }, 1000);
+        
     };
 
     //Walls
@@ -209,7 +225,6 @@ const startGame = () => {
     
     document.addEventListener('keydown', event => {
         const {x, y} = ball.velocity;
-        console.log(x, y);
         
         if(event.keyCode === 87 && y > 0 - maxVelocity){
             Body.setVelocity(ball, {x, y: y - 2});
@@ -240,18 +255,30 @@ const startGame = () => {
                 render.context = null;
                 render.textures = {};
                 startGame();
-});
+    });
             if(labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)){
-                document.querySelector('.winner').classList.remove('hidden');
-                world.gravity.y = 1;
-                world.bodies.forEach(body => {
-                    if(body.label === 'wall') {
-                        Body.setStatic(body, false);
-                    }
-                })
+                winGame('winner');
             }
         }))
     });
+    const winGame = (outcome) => {
+        const timer = document.querySelector('#timer');
+        timer.innerHTML = "GAME OVER";
+        console.log(outcome);
+        const winDiv = document.querySelector('.winner')
+        winDiv.classList.remove('hidden');
+        world.gravity.y = 1;
+        world.bodies.forEach(body => {
+            if(body.label === 'wall') {
+                Body.setStatic(body, false);
+            }
+        });
+        if(outcome === 'winner'){
+            winDiv.querySelector('h1').innerHTML = 'Winner!';
+        } else {
+            winDiv.querySelector('h1').innerHTML = 'Loser!';
+        }
+    };
 };
 
 startGame();
